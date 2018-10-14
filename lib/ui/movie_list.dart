@@ -3,6 +3,11 @@ import '../models/item_model.dart';
 import '../blocs/movie_bloc.dart';
 
 class movieDetail extends StatelessWidget {
+  var link, title = "";
+  movieDetail(String _link, String _title) {
+    link = _link;
+    title = _title;
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -13,7 +18,20 @@ class movieDetail extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        body: Center(child: Text("hello", textAlign: TextAlign.center)));
+        body: Padding(padding: EdgeInsets.only(top: 20.0) ,  child:  Center(child :
+        Column(children: <Widget>[
+          Image.network(
+            link,
+            fit: BoxFit.cover,
+          ),
+          Padding(
+              child: Text(
+                title,
+                softWrap: true,
+                textAlign: TextAlign.center,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.0))
+        ], crossAxisAlignment: CrossAxisAlignment.center))));
   }
 }
 
@@ -42,8 +60,7 @@ class MovieList extends StatelessWidget {
   Widget buildList(AsyncSnapshot<ItemModel> snapshot) {
     return GridView.builder(
         itemCount: snapshot.data.results.length,
-        gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200.0),
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
               child: Column(children: <Widget>[
@@ -51,11 +68,11 @@ class MovieList extends StatelessWidget {
                   'https://image.tmdb.org/t/p/w185${snapshot.data.results[index].poster_path}',
                   fit: BoxFit.cover,
                 ),
-                 Text('${snapshot.data.results[index].title}')
-              ]),
+
+              ], crossAxisAlignment: CrossAxisAlignment.stretch ,),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => movieDetail()));
+                    MaterialPageRoute(builder: (context) => movieDetail('https://image.tmdb.org/t/p/w185${snapshot.data.results[index].poster_path}' , '${snapshot.data.results[index].title}' )));
               });
         });
   }
